@@ -2,4 +2,3 @@
 node_modules/
 .elasticbeanstalk/
 .env
-nodemon.json
