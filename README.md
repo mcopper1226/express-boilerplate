@@ -1,9 +1,21 @@
-# Express Boilerplate
+# Express + React Boilerplate
 
-## Build Setup
-``` bash
-# install dependencies
-$ npm install
+## Develop
+
+```bash
+# install root dependencies
+$ yarn
+
+# install client dependencies
+$ cd client
+$ yarn
 
 # serve with hot reload at localhost:8080
-$ npm run dev
+$ yarn dev
+```
+
+## Build
+
+```bash
+$ yarn build
+```
