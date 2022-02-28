@@ -6,6 +6,8 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _path = _interopRequireDefault(require("path"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const express = require('express');
@@ -20,15 +22,26 @@ app.use((0, _cors.default)());
 app.use((0, _bodyParser.json)());
 app.use((0, _bodyParser.urlencoded)({
   extended: true
-})); // Have Node serve the files for our built React app
+})); // Serve files for our built React app
 
-app.use(express.static(_path.default.resolve(__dirname, '../client/build'))); // Handle GET requests to /api route
+app.use(express.static(_path.default.resolve(__dirname, '../client/build'))); // A demo async req to fetch some data
 
-app.get('/api', (req, res) => {
-  res.json({
-    message: 'Hello from server!'
-  });
-});
+async function getSomeData() {
+  try {
+    const d = await _axios.default.get('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+    const data = d.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+} // Handle reqs to api route
+
+
+app.get('/api', async (req, res, next) => {
+  const data = await getSomeData();
+  res.json(data);
+}); // Handle all other reqs with client app
+
 app.get('*', (req, res) => {
   res.sendFile(_path.default.resolve(__dirname, '../client/build', 'index.html'));
 });

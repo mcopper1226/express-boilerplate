@@ -4,10 +4,14 @@
   "description": "Express starter with all the friends",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec yarn restart",
-    "build": "babel src --out-dir dist --copy-files",
+    "dev-server": "nodemon --exec yarn restart",
+    "build-server": "babel src --out-dir dist --copy-files",
     "restart": "rimraf dist && yarn build && yarn start",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "start-client": "cd ./client && yarn start",
+    "build-client": "cd ./client && yarn build",
+    "dev": "concurrently \"yarn dev-server\" \"yarn start-client\"",
+    "build": "concurrently \"yarn build-server\" \"yarn build-client\""
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +29,7 @@
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
+    "concurrently": "^7.0.0",
     "eslint": "^8.10.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",

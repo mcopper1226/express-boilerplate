@@ -1,6 +1,7 @@
 import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import path from 'path';
+import axios from 'axios';
 
 const express = require('express');
 
@@ -16,14 +17,27 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-// Have Node serve the files for our built React app
+// Serve files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-// Handle GET requests to /api route
-app.get('/api', (req, res) => {
-  res.json({ message: 'Hello from server!' });
+// A demo async req to fetch some data
+async function getSomeData() {
+  try {
+    const d = await axios.get('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+    const data = d.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Handle reqs to api route
+app.get('/api', async (req, res, next) => {
+  const data = await getSomeData();
+  res.json(data);
 });
 
+// Handle all other reqs with client app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
